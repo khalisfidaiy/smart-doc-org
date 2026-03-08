@@ -1,6 +1,6 @@
 "use client"
 
-import { FileText, MoreHorizontal, Download } from "lucide-react"
+import { FileText, MoreHorizontal, Download, Eye } from "lucide-react"
 import {
   Table,
   TableBody,
@@ -149,27 +149,44 @@ export function DocumentTable({ documents, searchQuery }: DocumentTableProps) {
                     {formatAmount(doc.amount)}
                   </TableCell>
                   <TableCell>{getStatusBadge(status)}</TableCell>
-                  <TableCell>
-                    {downloadUrl ? (
-                      <a href={downloadUrl} target="_blank" rel="noopener noreferrer">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                  <TableCell className="flex gap-2">
+                    {doc.storage_path && (
+                      <>
+                        <a
+                          href={
+                            supabase.storage
+                              .from("documents")
+                              .getPublicUrl(doc.storage_path).data.publicUrl
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
                         >
-                          <Download className="h-4 w-4" />
-                          <span className="sr-only">Download document</span>
-                        </Button>
-                      </a>
-                    ) : (
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        disabled
-                        className="h-8 w-8 text-muted-foreground"
-                      >
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                          >
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                        </a>
+
+                        <a
+                          href={
+                            supabase.storage
+                              .from("documents")
+                              .getPublicUrl(doc.storage_path).data.publicUrl
+                          }
+                          download
+                        >
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                          >
+                            <Download className="h-4 w-4" />
+                          </Button>
+                        </a>
+                      </>
                     )}
                   </TableCell>
                 </TableRow>
